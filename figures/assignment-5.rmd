@@ -1,0 +1,65 @@
+---
+title: "Assignment-5"
+author: "Kelly Neal"
+date: "2023-02-18"
+output: pdf_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, warning = FALSE, message = FALSE)
+```
+
+Here we will show the difference between exploratory vs expository figures. 
+
+First, we will download our data from the package [{FSAdata}](https://github.com/fishR-Core-Team/FSAdata) and save it into a usable .csv file. 
+
+```{r}
+library(FSAdata)
+get_data <- FSAdata::SiscowetMI2004
+fish_dataframe <- data.frame(get_data)
+fish_Data <- write.csv(fish_dataframe, 
+file = "SiscowetMI2004.csv")
+
+fish_Data <- read.csv("SiscowetMI2004.csv")
+
+```
+
+Now that we have the data in a usable .csv format and saved as an object in R as ` r fish_data`, let's see what kind of data we have to use. 
+
+```{r}
+summary(fish_Data)
+```
+
+Let's now generate a simple **exploratory** plot. An exploratory plot simply shows you the basic structure of your data, or can also be thought of as a visual display of metadata before you start analyzing and manipulating the data itself. For this dataset, we will make a histogram of counts of fish per location. The ` r count()` function used below is from the R packages `r "dplyr"` and `r "ggplot"`.
+
+```{r}
+library(dplyr)
+library(ggplot2)
+
+#table of counts
+fish_per_loc <- fish_Data %>% 
+  count(locID, name = "Counts")
+
+#graphical representation of counts
+exploratory_figure <- ggplot(fish_Data, aes(x = fish_Data$locID)) +
+  geom_bar()
+
+print(exploratory_figure)
+```
+
+
+From this, we wil now embelish the plot to enable it to clearly convey to an audience what we want them to know about our data. This will transform the simple plot just for us to see, into an **expository** plot that is presentation ready. 
+
+``` {r}
+
+expository_figure <- ggplot(fish_Data, aes(x = fish_Data$locID, fill = fish_Data$sex)) +
+  geom_bar()+ 
+  labs(fill = "Sexes IDed", color = NULL) +
+  xlab("Locations") +
+  ylab("Fish Counts") +
+  theme_minimal()
+  
+print(expository_figure)
+```
+
+And thats it!
